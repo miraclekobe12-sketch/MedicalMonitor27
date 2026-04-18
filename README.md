@@ -9,40 +9,6 @@ Real-time heart-rate (BPM) and blood-oxygen (SpO₂) monitor built for
 ## Architecture Overview
 
 ```
-┌──────────────────────────────────────────────────────┐
-│  QNX Neutrino Microkernel                            │
-│                                                      │
-│  ┌─────────────────────────┐                         │
-│  │   vital_resmgr          │  Resource Manager       │
-│  │   (driver process)      │  owns /dev/vital_sensor │
-│  │                         │                         │
-│  │  ┌──────────────────┐   │                         │
-│  │  │  Sampler Thread  │◄──┤  Timer Pulse @ 50 Hz   │
-│  │  │  (MAX30102 I2C)  │   │  (deterministic, QNX)  │
-│  │  └────────┬─────────┘   │                         │
-│  │           │ mutex        │                         │
-│  │  ┌────────▼─────────┐   │                         │
-│  │  │   vital_data_t   │   │  atomic snapshot        │
-│  │  └────────┬─────────┘   │                         │
-│  │           │ io_read /    │                         │
-│  │           │ io_devctl    │                         │
-│  └───────────┼─────────────┘                         │
-│              │ IPC (QNX message passing)              │
-│  ┌───────────▼─────────────┐                         │
-│  │  max30102_dashboard     │  Display application    │
-│  │                         │                         │
-│  │  ┌──────────────────┐   │                         │
-│  │  │  Fetch Thread    │◄──┤  Timer Pulse @ 50 Hz   │
-│  │  │  devctl()        │   │                         │
-│  │  └────────┬─────────┘   │                         │
-│  │           │ mutex        │                         │
-│  │  ┌────────▼─────────┐   │                         │
-│  │  │  Render Thread   │◄──┤  Timer Pulse @ 30 fps  │
-│  │  │  QNX Screen API  │   │                         │
-│  │  └──────────────────┘   │                         │
-│  └─────────────────────────┘                         │
-└──────────────────────────────────────────────────────┘
-```
 
 ### Key QNX Concepts Used
 
@@ -130,10 +96,3 @@ Press `Ctrl+C` on either process to shut down cleanly.
 - **Double-buffered display** — eliminates tearing without vsync dependency.
 
 ---
-
-## Color Coding
-
-| Value | Green | Yellow | Red |
-|---|---|---|---|
-| BPM | 50–100 | 40–50 or 100–130 | < 40 or > 130 |
-| SpO₂ | ≥ 95 % | 90–94 % | < 90 % |
