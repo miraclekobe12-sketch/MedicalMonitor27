@@ -25,7 +25,7 @@ Real-time heart-rate (BPM) and blood-oxygen (SpO₂) monitor built for
 make
 ```
 
-Requires QNX SDP 7.x with `qcc` in PATH. Tested on `aarch64` target.
+Requires QNX SDP 8.0 with `qcc` in PATH. Tested on `aarch64` target.
 
 ---
 
