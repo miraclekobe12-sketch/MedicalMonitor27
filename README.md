@@ -6,23 +6,6 @@ Real-time heart-rate (BPM) and blood-oxygen (SpO₂) monitor built for
 
 ---
 
-## Architecture Overview
-
-```
-
-### Key QNX Concepts Used
-
-| Concept | Where |
-|---|---|
-| **Resource Manager** | `vital_resmgr.c` — exposes `/dev/vital_sensor` |
-| **Microkernel IPC** | `devctl(DCMD_VITAL_READ)` between processes |
-| **Timer Pulses** | All periodic loops — no `usleep()` drift |
-| **POSIX threads** | Sampler, Fetch, and Render threads |
-| **Mutex** | Protects shared `vital_data_t` snapshot |
-| **QNX Screen API** | Hardware-accelerated double-buffered display |
-
----
-
 ## File Structure
 
 ```
@@ -31,7 +14,7 @@ Real-time heart-rate (BPM) and blood-oxygen (SpO₂) monitor built for
 ├── vital_resmgr.c            # Resource Manager — I2C driver + algorithms
 ├── max30102_dashboard.c      # Display application — fetches from /dev/vital_sensor
 ├── Makefile                  # Build + deploy targets
-└── README.md                 # This file
+└── README.md                 
 ```
 
 ---
